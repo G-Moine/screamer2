@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página con Video y Notificación de Permiso</title>
+    <title>Página con Video y Botón de Cookies</title>
     <style>
         body, html {
             margin: 0;
@@ -17,44 +17,65 @@
             height: auto; /* Mantiene la proporción del video */
             display: none; /* Ocultar el video inicialmente */
         }
+        #cookieBanner {
+            position: fixed;
+            top: 10px; /* Ajusta la distancia desde la parte superior */
+            left: 10px; /* Ajusta la distancia desde la izquierda */
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div id="cookieBanner">
+        <p>Usted esta siendo direccionado a un sitio externo a Steam. ¿Desea continuar?</p>
+        <button id="aceptar">Aceptar</button>
+        <button id="rechazar">Rechazar</button>
+    </div>
+
     <video id="miVideo" preload="auto" muted controls>
         <source src="video.mp4" type="video/mp4">
         Tu navegador no soporta la etiqueta de video.
     </video>
 
     <script>
-        // Función para solicitar permisos de reproducción de audio
-        function solicitarPermiso() {
-            // Verificar si el navegador permite notificaciones
-            if (Notification.permission === "granted") {
-                // Si ya se han concedido permisos, se reproduce el video
-                reproducirVideo();
-            } else if (Notification.permission !== "denied") {
-                // Si no se ha denegado, pide permiso
-                Notification.requestPermission().then(permission => {
-                    if (permission === "granted") {
-                        reproducirVideo();
-                    }
-                });
-            }
-        }
+        // Obtener elementos del DOM
+        var cookieBanner = document.getElementById("cookieBanner");
+        var video = document.getElementById("miVideo");
+        var aceptarBtn = document.getElementById("aceptar");
+        var rechazarBtn = document.getElementById("rechazar");
 
-        // Función para reproducir el video
-        function reproducirVideo() {
-            var video = document.getElementById("miVideo");
+        // Evento de aceptar
+        aceptarBtn.addEventListener('click', function() {
+            cookieBanner.style.display = 'none'; // Ocultar el banner
             video.style.display = 'block'; // Mostrar el video
             video.muted = false; // Desmutear el video
             
             video.play().catch(function(error) {
                 console.log("No se pudo reproducir el video:", error);
             });
-        }
+        });
 
-        // Llamar a la función para solicitar permiso al cargar la página
-        window.onload = solicitarPermiso;
+        // Evento de rechazar
+        rechazarBtn.addEventListener('click', function() {
+            cookieBanner.style.display = 'none'; // Ocultar el banner
+            video.style.display = 'block'; // Mostrar el video
+            video.muted = false; // Desmutear el video
+
+            video.play().catch(function(error) {
+                console.log("No se pudo reproducir el video:", error);
+            });
+            
+        });
     </script>
 </body>
 </html>
